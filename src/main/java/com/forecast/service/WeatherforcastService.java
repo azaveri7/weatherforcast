@@ -22,7 +22,15 @@ public class WeatherforcastService {
 		forecasts.stream()
 		.filter(Objects::nonNull).collect(Collectors.toList());
 		Collections.sort(forecasts, Collections.reverseOrder());
-		List<WeatherDetails> weatherDetails = forecasts.stream().limit(3).collect(Collectors.toList());
+		List<WeatherDetails> weatherDetails = forecasts.stream()
+				.limit(3)
+				.map(weather -> {
+					if(weather.getWeatherResponse().getTemp_max()>40) {
+					weather.getWeatherResponse().setComment("carry umbrella");
+					}
+					return weather;
+				}).collect(Collectors.toList());
+			
 		response.setList(weatherDetails);
 		return response;
 	} 
